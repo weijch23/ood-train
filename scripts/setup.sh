@@ -83,10 +83,11 @@ if [[ -d "${DATASETS_DIR}" ]] && find "${DATASETS_DIR}" -mindepth 1 -maxdepth 1 
 else
     echo "[WARN] No datasets found in ${DATASETS_DIR}/"
     echo "       Place your dataset folders there before training. Expected layout:"
-    echo "         datasets/<dataset_name>/train/good/          # normal training PNGs"
-    echo "         datasets/<dataset_name>/valid/good/img/      # normal validation PNGs"
-    echo "         datasets/<dataset_name>/valid/Ungood/img/    # abnormal validation PNGs"
+    echo "         datasets/<dataset_name>/train/good/          # normal training images (PNG or NIfTI)"
+    echo "         datasets/<dataset_name>/valid/good/img/      # normal validation images"
+    echo "         datasets/<dataset_name>/valid/Ungood/img/    # abnormal validation images"
     echo "         datasets/<dataset_name>/valid/Ungood/label/  # binary masks"
+    echo "       NIfTI inputs are auto-converted to PNG on first run."
 fi
 
 # ── Summary ───────────────────────────────────────────────────────────────────
