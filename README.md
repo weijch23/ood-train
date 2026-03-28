@@ -47,7 +47,46 @@ All models expect the dataset root to follow this layout:
 - `label/` masks are optional for models that don't use pixel-level supervision (draem, dinomaly, fastflow, cflow, deepsvdd, cutpaste).
 - `train/good/` contains only normal (healthy) images — no anomalous samples used during training.
 
-## Usage
+## Quick Start (Shell Scripts)
+
+### Full Pipeline (setup + train + extract)
+
+```bash
+bash scripts/run_pipeline.sh [model] [dataset] [experiment_name] [gpu_ids] [env_name]
+
+# Examples:
+bash scripts/run_pipeline.sh                              # patchcore, default dataset, GPU 0
+bash scripts/run_pipeline.sh cfa                          # CFA, default dataset, GPU 0
+bash scripts/run_pipeline.sh rd4ad ./datasets/my_data exp1 1
+bash scripts/run_pipeline.sh fastflow ./datasets/my_data exp1 0,1,2 myenv
+```
+
+### Individual Steps
+
+```bash
+# 1. Setup environment (creates conda env, installs deps, downloads RadImageNet weights)
+#    For manual setup steps, see SETUP.md
+bash scripts/setup.sh [env_name]
+
+# 2. Train a model
+bash scripts/train.sh [model] [dataset] [experiment_name] [gpu_ids] [env_name]
+
+# 3. Extract anomaly maps + prediction masks
+bash scripts/extract.sh [model] [experiment_name] [gpu_id] [split] [env_name]
+```
+
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `model` | `patchcore` | Model name (see table above) |
+| `dataset` | `./datasets/synth23_pelvis_v7_png` | Path to dataset folder |
+| `experiment_name` | `<model>_<dataset_basename>` | Output subfolder name |
+| `gpu_ids` | `0` | GPU index(es), comma-separated. Use `cpu` for CPU |
+| `env_name` | `ood` | Conda environment name |
+| `split` | `test` | Dataset split for extraction (`test` or `valid`) |
+
+**Note:** `extract.sh` does not support `deepsvdd` or `cutpaste` (image-level models without pixel maps).
+
+## Usage (Python CLI)
 
 ### Training
 
@@ -83,6 +122,11 @@ python extract.py --config config/<model>.yaml \
 MROOD-TRAIN/
 ├── train.py                  # Unified training entry point
 ├── extract.py                # Unified feature extraction entry point
+├── scripts/
+│   ├── setup.sh              # Environment setup (conda + deps + RadImageNet weights)
+│   ├── train.sh              # Train a model on a dataset
+│   ├── extract.sh            # Extract anomaly maps + prediction masks
+│   └── run_pipeline.sh       # Full pipeline: setup → train → extract
 ├── config/
 │   ├── cfa.yaml
 │   ├── cflow.yaml
