@@ -24,7 +24,7 @@ All models expect the dataset root to follow this layout:
 ```
 <data_root>/
 ├── train/
-│   └── good/               # Normal training images (PNG)
+│   └── good/               # Normal training images (PNG / Nifti)
 │       ├── img_001.png
 │       ├── img_002.png
 │       └── ...
